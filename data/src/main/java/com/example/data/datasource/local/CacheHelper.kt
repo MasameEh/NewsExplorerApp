@@ -12,25 +12,23 @@ class CacheHelper @Inject constructor(@ApplicationContext context: Context) {
 
     private val sharedPreferences: SharedPreferences =
         context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
-    private val editor: SharedPreferences.Editor = sharedPreferences.edit()
 
     // Save string value
     fun saveString(key: String?, value: String?) {
         Log.i(TAG, "saveString: $value for key: $key")
-        editor.putString(key, value)
-        editor.commit()
+        sharedPreferences.edit().putString(key, value).apply()
     }
 
     // Get string value
     fun getString(key: String): String? {
-        Log.i(TAG, "getString: ${sharedPreferences.getString(key, null)}")
-        return sharedPreferences.getString(key, null)
+        val value = sharedPreferences.getString(key, null)
+        Log.i(TAG, "getString: $value")
+        return value
     }
 
     // Save boolean value
     fun saveBoolean(key: String?, value: Boolean) {
-        editor.putBoolean(key, value)
-        editor.commit()
+        sharedPreferences.edit().putBoolean(key, value).apply()
     }
 
     // Get boolean value
@@ -40,25 +38,15 @@ class CacheHelper @Inject constructor(@ApplicationContext context: Context) {
 
     // Remove a specific key
     fun remove(key: String?) {
-        editor.remove(key)
-        editor.commit()
+        sharedPreferences.edit().remove(key).apply()
     }
 
     // Clear all data
     fun clear() {
-        editor.clear()
-        editor.commit()
+        sharedPreferences.edit().clear().apply()
     }
 
     companion object {
-        private const val PREF_NAME = "weather_prefs"
-        private var cacheHelper: CacheHelper? = null
-
-        fun getInstance(context: Context): CacheHelper {
-            if (cacheHelper == null) {
-                cacheHelper = CacheHelper(context)
-            }
-            return cacheHelper as CacheHelper
-        }
+        private const val PREF_NAME = "news_prefs"
     }
 }
