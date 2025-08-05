@@ -2,6 +2,7 @@ package com.example.feature.newslist
 
 import android.os.Build
 import android.util.Log
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -38,6 +39,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -56,12 +58,15 @@ fun NewsListScreen(
     val newsState by viewModel.newsList.collectAsStateWithLifecycle()
     var searchQuery by remember { mutableStateOf("") }
 
+    val context = LocalContext.current
+
     LaunchedEffect(Unit) {
         val word = viewModel.getLastSearchWord()
         if (!word.isNullOrBlank()) {
             viewModel.searchNews(word)
         }
     }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -83,6 +88,12 @@ fun NewsListScreen(
                     if (searchQuery.isNotBlank()) {
                         viewModel.searchNews(searchQuery)
                         viewModel.saveLastSearchWord(searchQuery)
+                    }else{
+                        Toast.makeText(
+                            context,
+                            "Please enter a search term",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 },
                 modifier = Modifier.align(Alignment.CenterVertically)
