@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.size
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.ui.unit.dp
@@ -25,10 +26,15 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Image
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -39,51 +45,92 @@ import coil.compose.SubcomposeAsyncImage
 import com.example.core.utils.ResponseState
 import com.example.core.utils.toRelativeTime
 
-
 private const val TAG = "NewsList"
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun NewsListScreen(
     onClick: (String) -> Unit,
     viewModel: NewsListViewModel = hiltViewModel(),
-    category: String
-){
+) {
 
     val newsState by viewModel.newsList.collectAsStateWithLifecycle()
+    var searchQuery by remember { mutableStateOf("") }
+
     LaunchedEffect(Unit) {
-        viewModel.searchNews(category)
+        val word = viewModel.getLastSearchWord()
+        if (!word.isNullOrBlank()) {
+            viewModel.searchNews(word)
+        }
     }
-
-
-    when (newsState) {
-        is ResponseState.Loading -> {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator()
-            }
-        }
-        is ResponseState.Failure -> {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(text = "Error loading news")
-            }
-        }
-        is ResponseState.Success -> {
-            val news = (newsState as ResponseState.Success).data as List<News>
-            NewsList(
-                onClick = onClick,
-                news = news,
-                modifier = Modifier.fillMaxSize()
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    ) {
+        Row(modifier = Modifier.fillMaxWidth()) {
+            OutlinedTextField(
+                value = searchQuery,
+                onValueChange = { searchQuery = it },
+                label = { Text("Search news...") },
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(end = 8.dp),
+                singleLine = true
             )
+
+            Button(
+                onClick = {
+                    if (searchQuery.isNotBlank()) {
+                        viewModel.searchNews(searchQuery)
+                        viewModel.saveLastSearchWord(searchQuery)
+                    }
+                },
+                modifier = Modifier.align(Alignment.CenterVertically)
+            ) {
+                Text("Search")
+            }
         }
+
+        Spacer(modifier = Modifier.height(16.dp))
+        when (newsState) {
+            is ResponseState.Idle -> {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text("Search for news above 👆")
+                }
+            }
+            is ResponseState.Loading -> {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator()
+                }
+            }
+
+            is ResponseState.Failure -> {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(text = "Error loading news")
+                }
+            }
+
+            is ResponseState.Success -> {
+                val news = (newsState as ResponseState.Success).data as List<News>
+                NewsList(
+                    onClick = onClick,
+                    news = news,
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
+        }
+
     }
-
 }
-
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun NewsList(

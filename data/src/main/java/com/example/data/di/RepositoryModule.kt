@@ -1,9 +1,13 @@
 package com.example.data.di
 
+import com.example.data.datasource.local.IUserCacheLocalDataSource
+import com.example.data.datasource.local.UserCacheLocalDataSourceImp
 import com.example.data.datasource.remote.INewsRemoteDataSource
 import com.example.data.datasource.remote.NewsRemoteDataSourceImp
 import com.example.domain.adapters.INewsRepository
 import com.example.data.repository.NewsRepositoryImpl
+import com.example.data.repository.UserCacheRepository
+import com.example.domain.adapters.IUserCacheRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -20,5 +24,13 @@ abstract class RepositoryModule {
 
     @Binds
     @Singleton
+    abstract fun bindUserCacheRepository(newsRepository: UserCacheRepository): IUserCacheRepository
+
+    @Binds
+    @Singleton
     abstract fun bindNewsRemoteDataSource(newsRemoteDataSource: NewsRemoteDataSourceImp): INewsRemoteDataSource
+
+    @Binds
+    @Singleton
+    abstract fun bindUserCacheLocalDataSource(userCacheDataSource: UserCacheLocalDataSourceImp): IUserCacheLocalDataSource
 }

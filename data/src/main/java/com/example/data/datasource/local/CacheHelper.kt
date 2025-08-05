@@ -2,9 +2,13 @@ package com.example.data.datasource.local
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.util.Log
+import dagger.hilt.android.qualifiers.ApplicationContext
+import javax.inject.Inject
 
+private const val TAG = "CacheHelper"
 
-class CacheHelper private constructor(context: Context) {
+class CacheHelper @Inject constructor(@ApplicationContext context: Context) {
 
     private val sharedPreferences: SharedPreferences =
         context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
@@ -12,12 +16,14 @@ class CacheHelper private constructor(context: Context) {
 
     // Save string value
     fun saveString(key: String?, value: String?) {
+        Log.i(TAG, "saveString: $value for key: $key")
         editor.putString(key, value)
         editor.commit()
     }
 
     // Get string value
     fun getString(key: String): String? {
+        Log.i(TAG, "getString: ${sharedPreferences.getString(key, null)}")
         return sharedPreferences.getString(key, null)
     }
 

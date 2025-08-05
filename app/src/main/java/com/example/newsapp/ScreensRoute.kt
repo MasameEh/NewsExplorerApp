@@ -9,6 +9,7 @@ sealed class ScreensRoute {
     object SearchScreen : ScreensRoute()
     @Serializable
     data class NewsDetailsWebViewScreen(val url: String) : ScreensRoute()
+
     @Serializable
-    data class NewsListScreen(val category: String) : ScreensRoute()
+    data object NewsListScreen : ScreensRoute()
 }

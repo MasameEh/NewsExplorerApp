@@ -1,7 +1,8 @@
 package com.example.core.utils
 
 sealed class ResponseState {
-    data object Loading: ResponseState()
-    data class Success(val data : Any): ResponseState()
-    data class Failure(val err :Throwable): ResponseState()
+    data object Idle : ResponseState()
+    data object Loading : ResponseState()
+    data class Success(val data: Any) : ResponseState()
+    data class Failure(val err: Throwable) : ResponseState()
 }
