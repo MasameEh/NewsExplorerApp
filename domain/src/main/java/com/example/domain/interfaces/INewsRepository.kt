@@ -1,4 +1,4 @@
-package com.example.domain.adapters
+package com.example.domain.interfaces
 
 import com.example.domain.entities.NewsResponse
 

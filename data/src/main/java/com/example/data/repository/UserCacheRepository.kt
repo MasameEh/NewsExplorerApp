@@ -1,7 +1,7 @@
 package com.example.data.repository
 
 import com.example.data.datasource.local.IUserCacheLocalDataSource
-import com.example.domain.adapters.IUserCacheRepository
+import com.example.domain.interfaces.IUserCacheRepository
 import javax.inject.Inject
 
 class UserCacheRepository @Inject constructor(

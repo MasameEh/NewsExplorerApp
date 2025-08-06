@@ -1,7 +1,7 @@
 package com.example.data.repository
 
 import com.example.data.datasource.remote.INewsRemoteDataSource
-import com.example.domain.adapters.INewsRepository
+import com.example.domain.interfaces.INewsRepository
 import com.example.domain.entities.NewsResponse
 import javax.inject.Inject
 

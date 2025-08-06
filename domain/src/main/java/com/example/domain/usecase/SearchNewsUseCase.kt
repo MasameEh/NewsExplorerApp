@@ -2,7 +2,7 @@ package com.example.domain.usecase
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import com.example.domain.adapters.INewsRepository
+import com.example.domain.interfaces.INewsRepository
 import com.example.domain.entities.News
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
